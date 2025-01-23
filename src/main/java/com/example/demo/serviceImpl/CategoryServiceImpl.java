@@ -33,14 +33,31 @@ public class CategoryServiceImpl implements CategoryService {
         // category.setIsActive(categoryDto.getIsActive());
 
         Category category = modelMapper.map(categoryDto, Category.class);
-        category.setIsDeleted(false);
-        category.setCreatedBy(1);
-        category.setCreatedOn(new Date());
+        if (ObjectUtils.isEmpty(category.getId())) {
+            category.setIsDeleted(false);
+            category.setCreatedBy(1);
+            category.setCreatedOn(new Date());
+        } else {
+            updateCategory(category);
+        }
+
         Category saveCategory = categoryRepository.save(category);
         if (ObjectUtils.isEmpty(saveCategory)) {
             return false;
         }
         return true;
+    }
+
+    public void updateCategory(Category category) {
+        Optional<Category> id = categoryRepository.findById(category.getId());
+        Category existingCategory = id.get();
+        category.setCreatedBy(existingCategory.getCreatedBy());
+        category.setCreatedOn(existingCategory.getCreatedOn());
+        category.setIsDeleted(existingCategory.getIsDeleted());
+
+        category.setUpdatedBy(1);
+        category.setUpdatedOn(new Date());
+
     }
 
     @Override
