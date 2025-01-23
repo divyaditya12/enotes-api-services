@@ -3,15 +3,16 @@ package com.example.demo.serviceImpl;
 import java.util.Date;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.example.demo.categoryDto.CategoryDto;
+import com.example.demo.categoryDto.CategoryResponseDto;
 import com.example.demo.entity.Category;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
-
-import lombok.val;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -19,8 +20,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public Boolean saveCategory(Category category) {
+    public Boolean saveCategory(CategoryDto categoryDto) {
+        // Category category = new Category();
+        // category.setName(categoryDto.getName());
+        // category.setDescription(categoryDto.getDescription());
+        // category.setIsActive(categoryDto.getIsActive());
+
+        Category category = modelMapper.map(categoryDto, Category.class);
         category.setIsDeleted(false);
         category.setCreatedBy(1);
         category.setCreatedOn(new Date());
@@ -32,8 +42,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategory() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getAllCategory() {
+        List<Category> categories = categoryRepository.findAll();
+        List<CategoryDto> categoryDtoList = categories.stream().map(cat -> modelMapper.map(cat, CategoryDto.class))
+                .toList();
+        return categoryDtoList;
+    }
+
+    @Override
+    public List<CategoryResponseDto> getActiveCategories() {
+        List<Category> categories = categoryRepository.findByIsActiveTrue();
+        List<CategoryResponseDto> categoryResponseDtoList = categories.stream()
+                .map(cat -> modelMapper.map(cat, CategoryResponseDto.class)).toList();
+        return categoryResponseDtoList;
+
     }
 
 }
