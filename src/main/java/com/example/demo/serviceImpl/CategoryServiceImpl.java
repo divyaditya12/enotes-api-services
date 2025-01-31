@@ -13,6 +13,7 @@ import org.w3c.dom.CDATASection;
 import com.example.demo.categoryDto.CategoryDto;
 import com.example.demo.categoryDto.CategoryResponseDto;
 import com.example.demo.entity.Category;
+import com.example.demo.exception.ResourceNotFound;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 
@@ -77,11 +78,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
-    public CategoryDto getCategoryById(Integer id) {
-        Optional<Category> category = categoryRepository.findByIdAndIsDeletedFalse(id);
-        if (category.isPresent()) {
-            Category category2 = category.get();
-            return modelMapper.map(category2, CategoryDto.class);
+    public CategoryDto getCategoryById(Integer id) throws Exception {
+        Category category = categoryRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new ResourceNotFound("category not found with id=" + id));
+        if (!ObjectUtils.isEmpty(category)) {
+            return modelMapper.map(category, CategoryDto.class);
         }
         return null;
     }

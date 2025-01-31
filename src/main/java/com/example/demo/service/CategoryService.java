@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.demo.categoryDto.CategoryDto;
 import com.example.demo.categoryDto.CategoryResponseDto;
 import com.example.demo.entity.Category;
+import com.example.demo.exception.ResourceNotFound;
 
 public interface CategoryService {
 
@@ -14,7 +15,7 @@ public interface CategoryService {
 
     public List<CategoryResponseDto> getActiveCategories();
 
-    public CategoryDto getCategoryById(Integer id);
+    public CategoryDto getCategoryById(Integer id) throws Exception;
 
     public Boolean deleteCategoryById(Integer id);
 }

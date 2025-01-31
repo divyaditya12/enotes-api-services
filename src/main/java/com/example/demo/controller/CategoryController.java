@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.categoryDto.CategoryDto;
 import com.example.demo.categoryDto.CategoryResponseDto;
-import com.example.demo.entity.Category;
 import com.example.demo.service.CategoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("api/v1/category")
 public class CategoryController {
@@ -58,10 +60,10 @@ public class CategoryController {
     }
 
     @GetMapping("/get-category/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) throws Exception {
         CategoryDto categoryDto = categoryService.getCategoryById(id);
         if (ObjectUtils.isEmpty(categoryDto)) {
-            return new ResponseEntity<>("Category not found with id=" + id,
+            return new ResponseEntity<>("Internal server error",
                     HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(categoryDto, HttpStatus.OK);
