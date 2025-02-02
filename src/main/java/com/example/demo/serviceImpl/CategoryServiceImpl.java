@@ -14,8 +14,10 @@ import com.example.demo.categoryDto.CategoryDto;
 import com.example.demo.categoryDto.CategoryResponseDto;
 import com.example.demo.entity.Category;
 import com.example.demo.exception.ResourceNotFound;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
+import com.example.demo.util.Validation;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -26,12 +28,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private Validation validation;
+
     @Override
     public Boolean saveCategory(CategoryDto categoryDto) {
         // Category category = new Category();
         // category.setName(categoryDto.getName());
         // category.setDescription(categoryDto.getDescription());
         // category.setIsActive(categoryDto.getIsActive());
+
+        // Checking Validation
+        validation.categoryValidation(categoryDto);
 
         Category category = modelMapper.map(categoryDto, Category.class);
         if (ObjectUtils.isEmpty(category.getId())) {
@@ -75,7 +83,6 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryResponseDto> categoryResponseDtoList = categories.stream()
                 .map(cat -> modelMapper.map(cat, CategoryResponseDto.class)).toList();
         return categoryResponseDtoList;
-
     }
 
     public CategoryDto getCategoryById(Integer id) throws Exception {
