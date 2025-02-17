@@ -44,8 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = modelMapper.map(categoryDto, Category.class);
         if (ObjectUtils.isEmpty(category.getId())) {
             category.setIsDeleted(false);
-            category.setCreatedBy(1);
-            category.setCreatedOn(new Date());
+            // category.setCreatedBy(1);
+            // category.setCreatedOn(new Date());
         } else {
             updateCategory(category);
         }
@@ -64,8 +64,8 @@ public class CategoryServiceImpl implements CategoryService {
         category.setCreatedOn(existingCategory.getCreatedOn());
         category.setIsDeleted(existingCategory.getIsDeleted());
 
-        category.setUpdatedBy(1);
-        category.setUpdatedOn(new Date());
+        // category.setUpdatedBy(1);
+        // category.setUpdatedOn(new Date());
 
     }
 
