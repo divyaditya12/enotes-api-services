@@ -1,6 +1,5 @@
 package com.example.demo.serviceImpl;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,13 +7,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.w3c.dom.CDATASection;
 
 import com.example.demo.categoryDto.CategoryDto;
 import com.example.demo.categoryDto.CategoryResponseDto;
 import com.example.demo.entity.Category;
+import com.example.demo.exception.ExistDataException;
 import com.example.demo.exception.ResourceNotFound;
-import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import com.example.demo.util.Validation;
@@ -40,6 +38,12 @@ public class CategoryServiceImpl implements CategoryService {
 
         // Checking Validation
         validation.categoryValidation(categoryDto);
+        // Check for existing category
+        Boolean isExist = categoryRepository.existsByName(categoryDto.getName().trim());
+        if (isExist) {
+            // Throw Exception
+            throw new ExistDataException("Category already exist");
+        }
 
         Category category = modelMapper.map(categoryDto, Category.class);
         if (ObjectUtils.isEmpty(category.getId())) {
