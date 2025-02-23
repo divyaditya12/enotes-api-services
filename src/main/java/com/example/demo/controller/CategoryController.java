@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.categoryDto.CategoryDto;
-import com.example.demo.categoryDto.CategoryResponseDto;
+import com.example.demo.dto.CategoryDto;
+import com.example.demo.dto.CategoryResponseDto;
 import com.example.demo.service.CategoryService;
 import com.example.demo.util.CommonUtils;
 

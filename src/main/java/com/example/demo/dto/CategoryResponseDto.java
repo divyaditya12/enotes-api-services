@@ -1,4 +1,4 @@
-package com.example.demo.categoryDto;
+package com.example.demo.dto;
 
 import lombok.Data;
 

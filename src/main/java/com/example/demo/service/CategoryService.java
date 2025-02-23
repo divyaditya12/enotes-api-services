@@ -2,8 +2,8 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import com.example.demo.categoryDto.CategoryDto;
-import com.example.demo.categoryDto.CategoryResponseDto;
+import com.example.demo.dto.CategoryDto;
+import com.example.demo.dto.CategoryResponseDto;
 import com.example.demo.entity.Category;
 import com.example.demo.exception.ResourceNotFound;
 

@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.example.demo.categoryDto.CategoryDto;
-import com.example.demo.categoryDto.CategoryResponseDto;
+import com.example.demo.dto.CategoryDto;
+import com.example.demo.dto.CategoryResponseDto;
 import com.example.demo.entity.Category;
 import com.example.demo.exception.ExistDataException;
 import com.example.demo.exception.ResourceNotFound;
