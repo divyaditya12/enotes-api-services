@@ -1,5 +1,7 @@
 package com.example.demo.util;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -44,4 +46,24 @@ public class CommonUtils {
                 .build();
         return response.create();
     }
+
+    public static String getContentType(String originalFileName) {
+        String extension = FilenameUtils.getExtension(originalFileName);
+        switch (extension) {
+            case "pdf":
+                return "application/pdf";
+            case "xlsx":
+                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            case "txt":
+                return "text/plain";
+            case "png":
+                return "image/png";
+            case "jpeg":
+            case "jpg":
+                return "image/jpeg";
+            default:
+                return "application/octet-stream";
+        }
+    }
+
 }

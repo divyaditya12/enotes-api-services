@@ -1,7 +1,9 @@
 package com.example.demo.serviceImpl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.NotesDto;
@@ -144,6 +147,19 @@ public class NotesServiceImpl implements NotesService {
         return notesRepository.findAll().stream()
                 .map(note -> mapper.map(note, NotesDto.class)).toList();
 
+    }
+
+    @Override
+    public byte[] downloadFile(FileDetails fileDetails) throws Exception {
+        InputStream io = new FileInputStream(fileDetails.getFilePath());
+        return StreamUtils.copyToByteArray(io);
+    }
+
+    @Override
+    public FileDetails getFileDetails(Integer id) throws Exception {
+        FileDetails fileDetails = fileRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("File is not available"));
+        return fileDetails;
     }
 
 }
