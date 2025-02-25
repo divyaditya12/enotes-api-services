@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public interface NotesService {
 
-    public Boolean saveNotes(NotesDto notesDto) throws ResourceNotFound;
+    public Boolean saveNotes(NotesDto notesDto) throws ResourceNotFound, Exception;
 
     public List<NotesDto> getAllNotes();
 

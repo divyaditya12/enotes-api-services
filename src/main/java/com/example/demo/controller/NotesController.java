@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dto.NotesDto;
 import com.example.demo.entity.FileDetails;
 import com.example.demo.entity.Notes;
-import com.example.demo.exception.ResourceNotFound;
 import com.example.demo.service.NotesService;
 import com.example.demo.util.CommonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +34,7 @@ public class NotesController {
     private NotesService notesService;
 
     @PostMapping("/save-notes")
-    public ResponseEntity<?> saveNotes(@RequestBody NotesDto notesDto) throws ResourceNotFound {
+    public ResponseEntity<?> saveNotes(@RequestBody NotesDto notesDto) throws Exception {
         Boolean saveNotes = notesService.saveNotes(notesDto);
         if (saveNotes) {
             return CommonUtils.createBuildResponseMessage("Notes saved Successfully", HttpStatus.CREATED);

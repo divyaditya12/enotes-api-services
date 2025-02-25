@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -47,7 +48,7 @@ public class NotesServiceImpl implements NotesService {
     private String filePath;
 
     @Override
-    public Boolean saveNotes(NotesDto notesDto) throws ResourceNotFound {
+    public Boolean saveNotes(NotesDto notesDto) throws Exception {
 
         // validating notes
 
@@ -56,11 +57,21 @@ public class NotesServiceImpl implements NotesService {
             throw new ResourceNotFound("invalid category id");
         }
         Notes notes = mapper.map(notesDto, Notes.class);
+        if (!ObjectUtils.isEmpty(notes.getId())) {
+            updateNotes(notes);
+        }
         Notes saveNotes = notesRepository.save(notes);
         if (!ObjectUtils.isEmpty(saveNotes)) {
             return true;
         }
         return false;
+    }
+
+    private void updateNotes(Notes notes) throws Exception {
+        Notes existNotes = notesRepository.findById(notes.getId())
+                .orElseThrow(() -> new ResourceNotFound("Invalid notes id"));
+        notes.setCreatedBy(existNotes.getCreatedBy());
+        notes.setCreatedOn(existNotes.getCreatedOn());
     }
 
     @Override
