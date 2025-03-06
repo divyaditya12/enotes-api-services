@@ -23,4 +23,10 @@ public interface NotesService {
     public FileDetails getFileDetails(Integer id) throws Exception;
 
     public byte[] downloadFile(FileDetails fileDetails) throws Exception;
+
+    public void deleteNotesById(Integer id) throws Exception;
+
+    public void restoreNotesById(Integer id) throws Exception;
+
+    public List<NotesDto> recycleNotes(Integer id);
 }

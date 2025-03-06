@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,7 +76,30 @@ public class NotesController {
         headers.setContentDispositionFormData("attachment", fileDetails.getOriginalFileName());
 
         return ResponseEntity.ok().headers(headers).body(data);
+    }
 
+    @DeleteMapping("delete-notes/{id}")
+    public ResponseEntity<?> deleteNotesById(@PathVariable Integer id) throws Exception {
+        notesService.deleteNotesById(id);
+
+        return CommonUtils.createBuildResponseMessage("Notes deleted successfully", HttpStatus.OK);
+    }
+
+    @GetMapping("restore-notes/{id}")
+    public ResponseEntity<?> restoreNotesById(@PathVariable Integer id) throws Exception {
+        notesService.restoreNotesById(id);
+
+        return CommonUtils.createBuildResponseMessage("Notes restored successfully", HttpStatus.OK);
+    }
+
+    @GetMapping("recycle-notes")
+    public ResponseEntity<?> recycleNotes() throws Exception {
+        Integer userId = 2;
+        List<NotesDto> notes = notesService.recycleNotes(userId);
+        if (CollectionUtils.isEmpty(notes)) {
+            return CommonUtils.createBuildResponseMessage("Notes not available in recycle bin", HttpStatus.OK);
+        }
+        return CommonUtils.createBuildResponse(notes, HttpStatus.OK);
     }
 
 }

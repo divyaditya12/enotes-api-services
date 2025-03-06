@@ -7,12 +7,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.aspectj.weaver.ast.Not;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +58,8 @@ public class NotesServiceImpl implements NotesService {
         if (categoryId == null) {
             throw new ResourceNotFound("invalid category id");
         }
+        notesDto.setIsDeleted(false);
+        notesDto.setDeletedOn(null);
         Notes notes = mapper.map(notesDto, Notes.class);
         if (!ObjectUtils.isEmpty(notes.getId())) {
             updateNotes(notes);
@@ -171,6 +175,30 @@ public class NotesServiceImpl implements NotesService {
         FileDetails fileDetails = fileRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFound("File is not available"));
         return fileDetails;
+    }
+
+    @Override
+    public void deleteNotesById(Integer id) throws Exception {
+        Notes notes = notesRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Invalid notes id"));
+        notes.setIsDeleted(true);
+        notes.setDeletedOn(new Date());
+        notesRepository.save(notes);
+
+    }
+
+    @Override
+    public void restoreNotesById(Integer id) throws Exception {
+        Notes notes = notesRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Invalid notes id"));
+        notes.setIsDeleted(false);
+        notes.setDeletedOn(null);
+        notesRepository.save(notes);
+    }
+
+    @Override
+    public List<NotesDto> recycleNotes(Integer id) {
+        List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(id);
+        List<NotesDto> notesDtoList = recycleNotes.stream().map(note -> mapper.map(note, NotesDto.class)).toList();
+        return notesDtoList;
     }
 
 }
