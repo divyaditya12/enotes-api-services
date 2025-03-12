@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,13 +28,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<?> handleNullPointerException(Exception e) {
         return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        // return new ResponseEntity<>(e.getMessage(),
-        // HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
     @ExceptionHandler(ResourceNotFound.class)
     public ResponseEntity<?> handleResourceNotFoundException(Exception e) {
-        // return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
         return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -46,26 +46,40 @@ public class GlobalExceptionHandler {
             String field = ((FieldError) (er)).getField();
             error.put(field, msg);
         });
-        // return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> handleValidationException(ValidationException e) {
-        // return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
         return CommonUtils.createErrorResponse(e.getErrors(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ExistDataException.class)
     public ResponseEntity<?> handleExistDataException(ExistDataException e) {
-        // return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        // return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
         return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+        return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SuccessException.class)
+    public ResponseEntity<?> handleSuccessException(SuccessException e) {
+        return CommonUtils.createBuildResponseMessage(e.getMessage(), HttpStatus.OK);
+
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
+        return CommonUtils.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+
     }
 
 }
